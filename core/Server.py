@@ -21,13 +21,17 @@ class Client:
         while True:                
             conn, addr = self.__socket.accept()
             user = {'conn':conn,'addr':addr}
-            threading.Thread(target = self.connect_client,args=(user)).start()                
+            threading.Thread(target = self.__connect_client,args=(user)).start()                
         
     def stop(self):
         pass
-    def connect_client(self):
-        pass
-    def start_communication(self):
+    def __connect_client(self, user):
+        name = user['conn'].recv(1024).decode("utf8")
+        user['name'] = name
+        self.__clients.append(user)
+        self.__start_communication(user)
+        
+    def __start_communication(self):
         pass
     def broadcust(self):
         pass
