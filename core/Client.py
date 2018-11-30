@@ -7,14 +7,18 @@ class Client:
     def __init__(self, host,port):
         self.__host = host
         self.__port = port
-        self.__socket = socket(AF_INET, SOCK_STREAM)
+        self.__socket = socket(socket.AF_INET, socket.SOCK_STREAM)
         self.__input_buffer = deque()
         self.__output_buffer = deque()
     
     def run(self):
         pass        
     def __sendMsg(self):
-        pass
+        while True: 
+            msg = self.__get_output_buffer()
+            if msg is not None:
+                self.__socket.send(msg)        
+
     def __receivMsg(self):
         pass
     
