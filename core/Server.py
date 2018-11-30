@@ -44,9 +44,9 @@ class Client:
             client['conn'].send(client['name'], " ",client['addr'],":  ", msg)
  
     def get_port(self):
-        pass
+        return self.__port
     def get_host(self):
-        pass
+        return self.__host
     def log(self, msg):
         print(msg)
 
