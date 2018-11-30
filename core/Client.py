@@ -7,7 +7,7 @@ class Client:
     def __init__(self, host,port):
         self.__host = host
         self.__port = port
-        self.__socket = socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.__input_buffer = deque()
         self.__output_buffer = deque()
     
@@ -20,7 +20,13 @@ class Client:
                 self.__socket.send(msg)        
 
     def __receivMsg(self):
-        pass
+        while True:
+            try:
+                msg = self.__socket.recv(1024).decode("utf8")
+                self.__input_buffer_appand(msg)
+            except:
+                self.__log("msg recvest error")
+
     
     def __input_buffer_appand(self, msg):
         self.__input_buffer.append(msg)   
@@ -45,4 +51,4 @@ class Client:
     def get_host(self):
         pass
     def log(self, msg):
-        print(msg)
+        print("Client.log: ",msg)
