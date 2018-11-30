@@ -12,14 +12,16 @@ class Client:
         self.__output_buffer = deque()
     
     def run(self):
-        pass        
-    def __sendMsg(self):
+        threading.Thread(target = self.__receiv_msg).start()
+        self.send_msg()        
+    
+    def __send_msg(self):
         while True: 
             msg = self.__get_output_buffer()
             if msg is not None:
                 self.__socket.send(msg)        
 
-    def __receivMsg(self):
+    def __receiv_msg(self):
         while True:
             try:
                 msg = self.__socket.recv(1024).decode("utf8")
