@@ -5,6 +5,7 @@ import sys
 class Client:
     
     def __init__(self,host,port):
+        self.__msgsize = 1024
         self.__host = host
         self.__port = port
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,11 +30,16 @@ class Client:
         name = user['conn'].recv(1024).decode("utf8")
         user['name'] = name
         self.__clients.append(user)
+        self.log(user, "is connected")
         self.__start_communication(user)
         
-    def __start_communication(self):
-        pass
-    def broadcust(self):
+    def __start_communication(self,user):
+        self.__broadcast(user['name'], " joined the chat")                        
+        while True:
+            msg = user['conn'].recv(self.__msgsize)
+            self.__broadcast(bytes.decode(msg))            
+            
+    def __broadcust(self,msg):
         pass
     def get_port(self):
         pass
