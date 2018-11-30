@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import socket
 import threading
+import sys
 from collections import deque
 class Client:
     
@@ -12,12 +13,13 @@ class Client:
         self.__input_buffer = deque()
         self.__output_buffer = deque()
         self.__output_buffer_appand(name)
-    
+
     def run(self):
         try:
-            self.__socket.connect((self.get_host,self.get_port))
+            self.__socket.connect((self.get_host(),self.get_port()))
         except:
-            pass
+            self.log('socket connect error')
+            sys.exit(1)
         threading.Thread(target = self.__receiv_msg).start()
         self.__send_msg()        
     
@@ -33,8 +35,8 @@ class Client:
                 msg = self.__socket.recv(1024).decode("utf8")
                 self.__input_buffer_appand(msg)
             except:
-                self.__log("msg recvest error")
-
+                self.log("msg recvest error")
+                sys.exit(1)
     
     def __input_buffer_appand(self, msg):
         self.__input_buffer.append(msg)   
@@ -57,14 +59,9 @@ class Client:
             return None
 
     def get_port(self):
-        pass    
+        return self.__port
     def get_host(self):
-        pass
+        return self.__host
     def log(self, msg):
         print("Client.log: ",msg)
 
-c = Client("",777,"andrei")
-c.get_host
-c.get_port
-c.log('test')
-c.run()
