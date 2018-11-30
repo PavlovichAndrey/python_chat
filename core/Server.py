@@ -21,26 +21,28 @@ class Client:
         self.log('server start...')
         while True:                
             conn, addr = self.__socket.accept()
-            user = {'conn':conn,'addr':addr}
-            threading.Thread(target = self.__connect_client,args=(user)).start()                
+            client = {'conn':conn,'addr':addr}
+            threading.Thread(target = self.__connect_client,args=(client)).start()                
         
     def stop(self):
         pass
-    def __connect_client(self, user):
-        name = user['conn'].recv(1024).decode("utf8")
-        user['name'] = name
-        self.__clients.append(user)
-        self.log(user, "is connected")
-        self.__start_communication(user)
+    def __connect_client(self, client):
+        name = client['conn'].recv(1024).decode("utf8")
+        client['name'] = name
+        self.__clients.append(client)
+        self.log(client, "is connected")
+        self.__start_communication(client)
         
-    def __start_communication(self,user):
-        self.__broadcast(user['name'], " joined the chat")                        
+    def __start_communication(self,client):
+        self.__broadcast(client['name'], " joined the chat")                        
         while True:
-            msg = user['conn'].recv(self.__msgsize)
+            msg = client['conn'].recv(self.__msgsize)
             self.__broadcast(bytes.decode(msg))            
             
     def __broadcust(self,msg):
-        pass
+        for client in self.__clients:
+            client['conn'].send(client['name'], " ",client['addr'],":  ", msg)
+ 
     def get_port(self):
         pass
     def get_host(self):
