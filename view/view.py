@@ -20,7 +20,7 @@ class ChatWindow(Window):
         super().__init__(title)
         self.client = cl
         self.send_func = None        
-        self.set_send_function(cl.output_buffer_appand)
+        self.set_send_function(cl.msg_sendler)
         self.messages_list = None
         self.logins_list = None
         self.entry = None

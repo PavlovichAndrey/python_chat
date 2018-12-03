@@ -12,7 +12,8 @@ class Client:
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.__input_buffer = deque()
         self.__output_buffer = deque()
-        self.output_buffer_appand(name)
+        #self.output_buffer_appand(name)
+        self.msg_sendler = self.__send_msg
         
     def run(self):
         try:
@@ -21,16 +22,16 @@ class Client:
             self.log('socket connect error')
             sys.exit(1)
         threading.Thread(target = self.__receiv_msg).start()
-        #self.__send_msg()        
-        threading.Thread(target = self.__send_msg).start()
+        self.__send_msg(self.__name)        
+        #threading.Thread(target = self.__send_msg).start()
         
     
-    def __send_msg(self):
-        while True: 
-            msg = self.__get_output_buffer()
-            if msg is not None:
-                self.__socket.send(str.encode(msg))        
-
+    def __send_msg(self, msg):    
+        try:
+            self.__socket.send(str.encode(msg))        
+        except:
+            self.log("send_msg_error")
+            
     def __receiv_msg(self):
         while True:
             try:
