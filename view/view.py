@@ -18,7 +18,6 @@ class ChatWindow(Window):
     
     def __init__(self, title):        
         super().__init__(title)
-        
         self.messages_list = None
         self.logins_list = None
         self.entry = None
@@ -26,7 +25,10 @@ class ChatWindow(Window):
         self.exit_button = None
         self.target = ''
         self.build_window()
-         
+        
+    def set_send_function(self,function):
+        self.send = function
+        
     def build_window(self):
         # Size config
         self.root.geometry('750x500')
@@ -70,27 +72,38 @@ class ChatWindow(Window):
 
         # Button widget for sending messages
         self.send_button = tk.Button(frame03, text='Send')
-        self.send_button.bind('<Button-1>')
+        self.send_button.bind('<Button-1>',self.send_msg)
 
         # Button for exiting
-        self.exit_button = tk.Button(frame03, text='Exit')
-        self.exit_button.bind('<Button-1>')
+#        self.exit_button = tk.Button(frame03, text='Exit')
+#        self.exit_button.bind('<Button-1>',self.root.quit)
 
         # Positioning widgets in frame
         self.messages_list.pack(fill=tk.BOTH, expand=tk.YES)
         self.logins_list.pack(fill=tk.BOTH, expand=tk.YES)
         self.entry.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
         self.send_button.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
-        self.exit_button.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
+#        self.exit_button.pack(side=tk.LEFT, fill=tk.BOTH, expand=tk.YES)
 
         # Protocol for closing window using 'x' button
         self.root.protocol("WM_DELETE_WINDOW")
-
     
 #       self.login_window = LoginWindow(self, self.font)
-       
- #       self.notify_server(self.login_window.login, 'login')
+#       self.notify_server(self.login_window.login, 'login')
+    def send_msg(self,send_function):
+        self.messages_list.configure(state='normal')        
+        msg = self.entry.get(1.0,tk.END)
+        if not msg.isspace():
+            #self.messages_list.insert(1.0,msg)
+            send_function(msg)
+        self.messages_list.configure(state='disabled')
     
+    def view_new_msg(self,new_msg):
+        self.messages_list.configure(state='normal')        
+        self.messages_list.insert(tk.END, new_msg)
+        self.messages_list.configure(state='disabled')
     
+     
+
 c= ChatWindow('chat')
 c.root.mainloop()
