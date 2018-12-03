@@ -16,13 +16,15 @@ class Window():
 
 class ChatWindow(Window):
     
-    def __init__(self, title):        
+    def __init__(self, title,cl):        
         super().__init__(title)
+        self.client = cl
+        self.send_func = None        
+        self.set_send_function(cl.output_buffer_appand)
         self.messages_list = None
         self.logins_list = None
         self.entry = None
         self.send_button = None
-        self.send_func = None        
         self.exit_button = None
         self.target = ''
         self.build_window()
@@ -59,7 +61,7 @@ class ChatWindow(Window):
 
         # ScrolledText widget for displaying messages
         self.messages_list = scrolledtext.ScrolledText(frame00, wrap='word')
-        self.messages_list.insert(tk.END, 'Welcome to chat\n')
+        self.messages_list.insert(tk.END, '\nWelcome to chat\n')
         self.messages_list.configure(state='disabled')
 
         # Listbox widget for displaying active users and selecting them
@@ -84,28 +86,37 @@ class ChatWindow(Window):
 
         # Protocol for closing window using 'x' button
         self.root.protocol("WM_DELETE_WINDOW")
-        self.root.mainloop()
         
+    def run(self):
+        self.client.run()
+        self.get_msg()
+        self.root.mainloop()
         
     def send_msg(self,send_function):
         if self.send_func is None:
             print("send_function is null")
         else:
-            try:
+            msg = self.entry.get(1.0,tk.END)
+            if not msg.isspace():
+                #self.messages_list.insert(1.0,msg)
+                self.send_func(msg)
                 msg = self.entry.get(1.0,tk.END)
-                if not msg.isspace():
-                    #self.messages_list.insert(1.0,msg)
-                    self.send(msg)
-                    msg = self.entry.get(1.0,tk.END)
-                    self.entry.delete(1.0,tk.END)
-            except:
-                pass
+                self.entry.delete(1.0,tk.END)
+        msg = self.client.get_input_buffer()
     
+    def get_msg(self):
+        msg = self.client.get_input_buffer()
+        if msg is not None:
+            self.view_new_msg(msg)
+        self.root.after(200, self.get_msg)
+        
+
+
     def view_new_msg(self,new_msg):
         self.messages_list.configure(state='normal')        
         self.messages_list.insert(1.0,new_msg)
         self.messages_list.configure(state='disabled')
-    
+
      
 
 

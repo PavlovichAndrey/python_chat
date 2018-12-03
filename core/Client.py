@@ -2,6 +2,7 @@
 import socket
 import threading
 import sys
+import time
 from collections import deque
 class Client:
     
@@ -12,8 +13,8 @@ class Client:
         self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.__input_buffer = deque()
         self.__output_buffer = deque()
-        self.__output_buffer_appand(name)
-
+        self.output_buffer_appand(name)
+        
     def run(self):
         try:
             self.__socket.connect((self.get_host(),self.get_port()))
@@ -21,7 +22,9 @@ class Client:
             self.log('socket connect error')
             sys.exit(1)
         threading.Thread(target = self.__receiv_msg).start()
-        self.__send_msg()        
+        #self.__send_msg()        
+        threading.Thread(target = self.__send_msg).start()
+        
     
     def __send_msg(self):
         while True: 
@@ -31,6 +34,7 @@ class Client:
 
     def __receiv_msg(self):
         while True:
+            time.sleep(1)
             try:
                 msg = self.__socket.recv(1024).decode("utf8")
                 self.__input_buffer_appand(msg)
@@ -42,11 +46,11 @@ class Client:
         self.__input_buffer.append(msg)   
         self.log(" i_b_a: "+ str(msg))
     
-    def __output_buffer_appand(self, msg):
+    def output_buffer_appand(self, msg):
         self.__output_buffer.append(msg)   
         self.log(" o_b_a: " + str(msg))
         
-    def __get_input_buffer(self):
+    def get_input_buffer(self):
         try:
             return self.__input_buffer.popleft()
         except IndexError:
