@@ -59,7 +59,7 @@ class ChatWindow(Window):
 
         # ScrolledText widget for displaying messages
         self.messages_list = scrolledtext.ScrolledText(frame00, wrap='word')
-        self.messages_list.insert(tk.END, 'Welcome to Python Chat\n')
+        self.messages_list.insert(tk.END, 'Welcome to chat\n')
         self.messages_list.configure(state='disabled')
 
         # Listbox widget for displaying active users and selecting them
@@ -84,7 +84,9 @@ class ChatWindow(Window):
 
         # Protocol for closing window using 'x' button
         self.root.protocol("WM_DELETE_WINDOW")
-    
+        self.root.mainloop()
+        
+        
     def send_msg(self,send_function):
         if self.send_func is None:
             print("send_function is null")
@@ -106,6 +108,4 @@ class ChatWindow(Window):
     
      
 
-c= ChatWindow('chat')
 
-c.root.mainloop()
