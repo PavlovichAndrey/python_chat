@@ -2,7 +2,6 @@
 import socket
 import threading
 import sys
-import time
 from collections import deque
 class Client:
     
@@ -34,7 +33,6 @@ class Client:
 
     def __receiv_msg(self):
         while True:
-            time.sleep(1)
             try:
                 msg = self.__socket.recv(1024).decode("utf8")
                 self.__input_buffer_appand(msg)
