@@ -22,12 +22,13 @@ class ChatWindow(Window):
         self.logins_list = None
         self.entry = None
         self.send_button = None
+        self.send_func = None        
         self.exit_button = None
         self.target = ''
         self.build_window()
         
     def set_send_function(self,function):
-        self.send = function
+        self.send_func = function
         
     def build_window(self):
         # Size config
@@ -74,10 +75,6 @@ class ChatWindow(Window):
         self.send_button = tk.Button(frame03, text='Send')
         self.send_button.bind('<Button-1>',self.send_msg)
 
-        # Button for exiting
-#        self.exit_button = tk.Button(frame03, text='Exit')
-#        self.exit_button.bind('<Button-1>',self.root.quit)
-
         # Positioning widgets in frame
         self.messages_list.pack(fill=tk.BOTH, expand=tk.YES)
         self.logins_list.pack(fill=tk.BOTH, expand=tk.YES)
@@ -88,22 +85,27 @@ class ChatWindow(Window):
         # Protocol for closing window using 'x' button
         self.root.protocol("WM_DELETE_WINDOW")
     
-#       self.login_window = LoginWindow(self, self.font)
-#       self.notify_server(self.login_window.login, 'login')
     def send_msg(self,send_function):
-        self.messages_list.configure(state='normal')        
-        msg = self.entry.get(1.0,tk.END)
-        if not msg.isspace():
-            #self.messages_list.insert(1.0,msg)
-            send_function(msg)
-        self.messages_list.configure(state='disabled')
+        if self.send_func is None:
+            print("send_function is null")
+        else:
+            try:
+                msg = self.entry.get(1.0,tk.END)
+                if not msg.isspace():
+                    #self.messages_list.insert(1.0,msg)
+                    self.send(msg)
+                    msg = self.entry.get(1.0,tk.END)
+                    self.entry.delete(1.0,tk.END)
+            except:
+                pass
     
     def view_new_msg(self,new_msg):
         self.messages_list.configure(state='normal')        
-        self.messages_list.insert(tk.END, new_msg)
+        self.messages_list.insert(1.0,new_msg)
         self.messages_list.configure(state='disabled')
     
      
 
 c= ChatWindow('chat')
+
 c.root.mainloop()
