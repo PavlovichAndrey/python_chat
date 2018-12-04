@@ -30,7 +30,7 @@ class Server:
         name = client['conn'].recv(1024).decode("utf8")
         client['name'] = name
         self.__clients.append(client)
-        self.log(str(client['name']) +" "+str(client['name']) +" is connected")
+        self.log(str(client['name']) +" "+str(client['name']) +" is connected\n ")
         self.__start_communication(client)
         
     def __start_communication(self,client):

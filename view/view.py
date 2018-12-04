@@ -16,11 +16,10 @@ class Window():
 
 class ChatWindow(Window):
     
-    def __init__(self, title,cl):        
+    def __init__(self, title):        
         super().__init__(title)
-        self.client = cl
         self.send_func = None        
-        self.set_send_function(cl.msg_sendler)
+        self.get_msg_func = None        
         self.messages_list = None
         self.logins_list = None
         self.entry = None
@@ -31,6 +30,9 @@ class ChatWindow(Window):
         
     def set_send_function(self,function):
         self.send_func = function
+    
+    def set_get_msg_function(self,function):
+        self.get_msg_func = function
         
     def build_window(self):
         # Size config
@@ -88,7 +90,6 @@ class ChatWindow(Window):
         self.root.protocol("WM_DELETE_WINDOW")
         
     def run(self):
-        self.client.run()
         self.get_msg()
         self.root.mainloop()
         
@@ -102,10 +103,10 @@ class ChatWindow(Window):
                 self.send_func(msg)
                 msg = self.entry.get(1.0,tk.END)
                 self.entry.delete(1.0,tk.END)
-        msg = self.client.get_input_buffer()
+        #msg = self.client.get_input_buffer()
     
     def get_msg(self):
-        msg = self.client.get_input_buffer()
+        msg = self.get_msg_func()
         if msg is not None:
             self.view_new_msg(msg)
         self.root.after(200, self.get_msg)
