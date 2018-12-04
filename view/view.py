@@ -63,7 +63,7 @@ class ChatWindow(Window):
 
         # ScrolledText widget for displaying messages
         self.messages_list = scrolledtext.ScrolledText(frame00, wrap='word')
-        self.messages_list.insert(tk.END, '\nWelcome to chat\n')
+        self.messages_list.insert(tk.END, 'Welcome to chat\n')
         self.messages_list.configure(state='disabled')
 
         # Listbox widget for displaying active users and selecting them

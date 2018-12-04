@@ -25,23 +25,35 @@ class Server:
             threading.Thread(target = self.__connect_client,args=(client,)).start()                
         
     def stop(self):
-        pass
+        self.__socket.close()
+        sys.exit(0)
     def __connect_client(self, client):
         name = client['conn'].recv(1024).decode("utf8")
         client['name'] = name
         self.__clients.append(client)
-        self.log(str(client['name']) +" "+str(client['name']) +" is connected\n ")
+        self.log(str(client['name']) +" "+str(client['name']) +" is connected\n")
         self.__start_communication(client)
         
     def __start_communication(self,client):
-        self.__broadcast(str(client['name']) + " joined the chat")                        
+        self.__broadcast(str(client['name']) + " joined the chat\n")                        
         while True:
-            msg = client['conn'].recv(self.__msgsize)
-            self.__broadcast(bytes.decode(msg))            
+            try:
+                msg = client['conn'].recv(self.__msgsize)                    
+            except:
+                try:
+                    self.__clients.remove(client)
+                except:
+                    pass
+                self.log(str(client['name']) +" "+str(client['name']) +" is disconnected\n")
+                if len(self.__clients) == 0:
+                    self.stop()            
+                break
+            self.__broadcast(str(client['name'])+ " "+str(client['addr'])+":  "+ bytes.decode(msg))            
+            
             
     def __broadcast(self,msg):
         for client in self.__clients:
-            client['conn'].send(str.encode(str(client['name'])+ " "+str(client['addr'])+":  "+ msg))
+            client['conn'].send(str.encode(msg))
  
     def get_port(self):
         return self.__port

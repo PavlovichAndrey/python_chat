@@ -25,7 +25,9 @@ class Client:
         self.__send_msg(self.__name)        
         #threading.Thread(target = self.__send_msg).start()
         
-    
+    def stop(self):
+        self.__socket.close()
+        
     def __send_msg(self, msg):    
         try:
             self.__socket.send(str.encode(msg))        

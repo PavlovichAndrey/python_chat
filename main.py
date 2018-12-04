@@ -7,9 +7,7 @@ port = 33222
 
 
 if __name__ == "__main__":
-    cl = Client(host,port,"nikita")
-    #threading.Thread(target = cl.run()).start()                
-    #cl.run()
+    cl = Client(host,port,"user5")
     v = v.ChatWindow("py_chat")
     v.set_send_function(cl.msg_sendler)
     v.set_get_msg_function(cl.get_input_buffer)
