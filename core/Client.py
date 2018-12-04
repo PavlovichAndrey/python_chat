@@ -23,10 +23,10 @@ class Client:
             sys.exit(1)
         threading.Thread(target = self.__receiv_msg).start()
         self.__send_msg(self.__name)        
-        #threading.Thread(target = self.__send_msg).start()
         
     def stop(self):
         self.__socket.close()
+        sys.exit(1)
         
     def __send_msg(self, msg):    
         try:
@@ -41,8 +41,8 @@ class Client:
                 self.__input_buffer_appand(msg)
             except:
                 self.log("msg recvest error")
-                sys.exit(1)
-    
+                self.stop()
+                
     def __input_buffer_appand(self, msg):
         self.__input_buffer.append(msg)   
         self.log(" i_b_a: "+ str(msg))
